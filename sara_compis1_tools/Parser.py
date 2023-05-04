@@ -131,20 +131,17 @@ class Parser:
     def process_element_productions(self, element, checked_elements, elements_to_process, new_group, non_terminal_names):
         
         element_productions = [prod for prod in self.productions if prod.name == element]
-
         if not element_productions:
             return
 
         element_production = element_productions[0]
         for production in element_production.productions:
             first_element = production[0]
-
             if first_element not in checked_elements:
                 checked_elements.append(first_element)
                 elements_to_process.append(first_element)
 
             production.insert(0, '•')
-
             if production not in new_group.productions:
                 new_prod_obj = prod_obj(element_production.name)
                 new_prod_obj.productions.append(production)
@@ -152,25 +149,12 @@ class Parser:
 
 
 
-    def closure(self, no):
-        augmented_production = [prod for prod in self.productions if prod.augmented]
+    def closure(self, no, heart_prductions):
         non_terminal_names = list(set(prod.name for prod in self.productions))
 
-        if not augmented_production:
-            return None
-
-        augmented_production = augmented_production[0]
-
-        ## Setup inicial de prueba
-        # augmented_production = prod_obj('E')
-        
-        ## Prueba 1
-        # augmented_production.productions.append(['E', '+', '•', 'T'])
-
-        ## Prueba 2
-        # augmented_production.productions.append(['E', '•'])
         new_group = group_i(no)
-        new_group.heart.append(augmented_production)
+        for heart_production in heart_prductions:
+            new_group.heart.append(heart_production)
 
         checked_elements = []
         elements_to_process = []
@@ -196,7 +180,7 @@ if __name__ == "__main__":
     parser = Parser("sara_compis1_tools/slr-1.yalp")
     parser.set_values()
     parser.gen_aumented_grammar()
-    wut = parser.closure(0)
+    # wut = parser.closure(0)
     print(parser.tokens)
 
 
