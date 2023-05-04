@@ -8,6 +8,13 @@ class prod_obj:
     def __init__(self, name):
         self.name = name
         self.productions = []
+        self.augmented = False
+
+class group_i:
+    def __init__(self, i_num):
+        self.i_num = i_num
+        self.heart = []
+        self.productions = []
 
 
 class Parser:
@@ -111,15 +118,42 @@ class Parser:
 
                     self.productions.append(prod)
                     indx += 1
-                    
+
 
     def gen_aumented_grammar(self):
         first_prod = self.productions[0]
         augmented_grammar = prod_obj(f"{first_prod.name}'")
-        augmented_grammar.productions.append([first_prod.name])
+        augmented_grammar.productions.append(['•', first_prod.name])
+        augmented_grammar.augmented = True
         self.productions.insert(0, augmented_grammar)
 
 
+    def closure(self, no):
+        augmented = [prod for prod in self.productions if prod.augmented]
+        if augmented:
+            augmented = augmented[0]
+            
+            newI = group_i(no)
+            newI.heart.append(augmented)
+            checked = []
+
+            for i in range(len(newI.heart)):
+                dot_index = newI.heart[i].productions[0].index('•')
+                element_after_dot = newI.heart[i].productions[0][dot_index + 1]
+                checked.append(element_after_dot)
+                obj_element_after_dot = [prod for prod in self.productions if prod.name == element_after_dot]
+
+                if obj_element_after_dot:
+                    obj_element_after_dot = obj_element_after_dot[0]
+                    for p in obj_element_after_dot.productions:
+                        p.insert(0, '•')
+                        if p not in newI.productions:
+                            new_prod = prod_obj(obj_element_after_dot.name)
+                            new_prod.productions.append(p)
+                            newI.productions.append(new_prod)                            
+            return newI
+        else:
+            return None
 
 
                 
@@ -129,6 +163,7 @@ if __name__ == "__main__":
     parser = Parser("sara_compis1_tools/slr-1.yalp")
     parser.set_values()
     parser.gen_aumented_grammar()
+    wut = parser.closure(0)
     print(parser.tokens)
 
 

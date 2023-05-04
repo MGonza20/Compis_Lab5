@@ -13,15 +13,15 @@ IGNORE WS
 
 %%
 
-expression:
-    expression PLUS term
-  | term
+E:
+    E + T
+  | T
 ;
-term:
-    term TIMES factor
-  | factor
+T:
+    T * F
+  | F
 ;
-factor:
-    LPAREN expression RPAREN
-  | ID
+F:
+    ( E )
+  | id
 ;
