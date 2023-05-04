@@ -55,7 +55,8 @@ class Parser:
         return lines
     
 
-    def process_elements(self, line, list_, prod):
+    def process_elements(self, line, prod, multiple_r=False):
+        list_ = []
         for element in line:
             if element == '|':
                 if list_:
@@ -72,7 +73,11 @@ class Parser:
                 break
             else:
                 list_.append(element)
-        return list_, prod, element
+
+        if multiple_r:
+            return prod, element, list_
+        else:
+            return prod
     
     
     def set_values(self):
@@ -91,16 +96,13 @@ class Parser:
 
             elif line[0] and line[0][-1] == ':':
                 prod = prod_obj(line[0][:-1])
-                
+
                 if len(line) > 1:
-                    list_ = []
-                    list_, prod, element = self.process_elements(line[1:], list_, prod)
+                    prod = self.process_elements(line[1:], prod)
                     self.productions.append(prod)
                 else:
                     while True:
-                        list_ = []
-                        list_, prod, element = self.process_elements(splits[indx], list_, prod)
-
+                        prod, element, list_ = self.process_elements(splits[indx], prod, multiple_r=True)
                         if element[-1] == ';':
                             break
                         else:
