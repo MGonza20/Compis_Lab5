@@ -111,6 +111,14 @@ class Parser:
 
                     self.productions.append(prod)
                     indx += 1
+                    
+
+    def gen_aumented_grammar(self):
+        first_prod = self.productions[0]
+        augmented_grammar = prod_obj(f"{first_prod.name}'")
+        augmented_grammar.productions.append([first_prod.name])
+        self.productions.insert(0, augmented_grammar)
+
 
 
 
@@ -120,6 +128,7 @@ class Parser:
 if __name__ == "__main__":
     parser = Parser("sara_compis1_tools/slr-1.yalp")
     parser.set_values()
+    parser.gen_aumented_grammar()
     print(parser.tokens)
 
 
