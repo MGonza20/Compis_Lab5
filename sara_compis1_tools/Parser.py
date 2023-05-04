@@ -54,6 +54,26 @@ class Parser:
                             line.pop(line.index(element))
         return lines
     
+
+    def process_elements(self, line, list_, prod):
+        for element in line:
+            if element == '|':
+                if list_:
+                    prod.productions.append(list_)
+                list_ = []
+            elif element[-1] == ';':
+                if len(element) > 1:
+                    list_.append(element[:-1])
+                else:
+                    if element and element != ';':
+                        list_.append(element)
+                if list_:
+                    prod.productions.append(list_)
+                break
+            else:
+                list_.append(element)
+        return list_, prod, element
+    
     
     def set_values(self):
         splits = [line.split(' ') for line in self.getLines()]
@@ -71,45 +91,15 @@ class Parser:
 
             elif line[0] and line[0][-1] == ':':
                 prod = prod_obj(line[0][:-1])
+                
                 if len(line) > 1:
                     list_ = []
-                    for element in line[1:]:
-                        if element == '|':
-                            if list_:
-                                prod.productions.append(list_)
-                            list_ = []
-                        elif element[-1] == ';':
-                            if len(element) > 1:
-                                list_.append(element[:-1])
-                            else:
-                                if element and element != ';':
-                                    list_.append(element)
-                            if list_:
-                                prod.productions.append(list_)
-                            break
-                        else:
-                            list_.append(element)
+                    list_, prod, element = self.process_elements(line[1:], list_, prod)
                     self.productions.append(prod)
-
                 else:
                     while True:
                         list_ = []
-                        for element in splits[indx]:
-                            if element == '|':
-                                if list_:
-                                    prod.productions.append(list_)
-                                list_ = []
-                            elif element[-1] == ';':
-                                if len(element) > 1:
-                                    list_.append(element[:-1])
-                                else:
-                                    if element and element != ';':
-                                        list_.append(element)
-                                if list_:
-                                    prod.productions.append(list_)
-                                break
-                            else:
-                                list_.append(element)
+                        list_, prod, element = self.process_elements(splits[indx], list_, prod)
 
                         if element[-1] == ';':
                             break
