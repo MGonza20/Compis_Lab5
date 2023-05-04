@@ -1,0 +1,22 @@
+
+(* Archivo 3 *)
+
+let digito = ['0'-'9'] (* prueba comentario *)
+let letra = ['a'-'z''A'-'Z']
+let final = 'abc'
+let identificador = letra(letra|digito)*(final)
+let enteros = digito+
+let decimales = (enteros).(enteros)
+let palabra_reservada_for = 'for'
+let comilla_doble = '"'
+let cadena = comilla_doble(letra|digito|' ')+(comilla_doble)
+
+
+
+rule tokens =
+	identificador	{ print("Identificador\n") } 
+    | palabra_reservada_if		{ print("Palabra reservada: If\n") }
+    | palabra_reservada_for		{ print("Palabra reservada: For\n") }
+    | enteros		{ print("Número entero\n") }
+    | decimales	{ print("Número decimal\n") }
+    | cadena		{ print("Cadena\n") }

@@ -1,0 +1,18 @@
+  
+(* Archivo 1 *)
+
+let digito = ['0'-'9']
+let enteros = digito+
+let decimales = enteros.(enteros)
+let beggining = '0x'
+let hexadecimales = beggining['0'-'9''a'-'f''A'-'F']+
+let aritmeticos = ['+''-''*''/']
+
+
+rule tokens =
+	enteros	{ print("Número entero\n") } (* Ignorar espacios en blanco *)
+  | decimales		{ print("Número decimal\n") }
+  | hexadecimales	{ print("Número hexadecimal\n") }
+  | aritmeticos		{ print("Operador aritmetico\n") }
+  | '^'				{ print("Operador de potenciacion\n") }
+

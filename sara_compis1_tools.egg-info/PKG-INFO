@@ -1,0 +1,55 @@
+Metadata-Version: 2.1
+Name: sara-compis1-tools
+Version: 0.0.12
+Summary: A collection of tools for the Language Design course
+Home-page: https://github.com/MGonza20/Compis_Lab4
+Author: Sara Paguaga
+Author-email: sara.paguaga@gmail.com
+License: MIT
+Keywords: Compiler
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+License-File: LICENSE.txt
+
+This is collection of tools for the Language Design course to be able to generate a lexical analyzer.
+
+Change Log
+===========
+
+0.0.4 (08/04/2023)
+------------------
+- More fixes.
+
+0.0.5 (19/04/2023)
+------------------
+- Rearranging packages.
+
+0.0.6 (19/04/2023)
+------------------
+- More fields for the StateAFD class.
+
+0.0.7 (23/04/2023)
+------------------
+- Additions for AFN simulation.
+
+0.0.8 (24/04/2023)
+------------------
+- Fixes.
+
+0.0.9 (24/04/2023)
+------------------
+- Show errors in order from LexEval.
+
+0.0.10 (24/04/2023)
+-------------------
+- Fixes.
+
+0.0.11 (24/04/2023)
+-------------------
+- Fixes.
+
+0.0.12 (24/04/2023)
+-------------------
+- Fixing errors.
