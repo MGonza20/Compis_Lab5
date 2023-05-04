@@ -4,10 +4,10 @@
 /* T → T ∗ F | F */
 /* F → ( E ) | id */
 
-%token ID
-%token PLUS
-%token TIMES
-%token LPAREN RPAREN
+%token id
+%token +
+%token *
+%token ( )
 %token WS
 IGNORE WS
 

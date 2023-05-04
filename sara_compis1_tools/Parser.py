@@ -130,12 +130,14 @@ class Parser:
 
     def closure(self, no):
         augmented = [prod for prod in self.productions if prod.augmented]
+        not_terminals = list(set(prod.name for prod in self.productions))
         if augmented:
             augmented = augmented[0]
             
             newI = group_i(no)
             newI.heart.append(augmented)
             checked = []
+            toDo = []
 
             for i in range(len(newI.heart)):
                 dot_index = newI.heart[i].productions[0].index('•')
@@ -146,11 +148,32 @@ class Parser:
                 if obj_element_after_dot:
                     obj_element_after_dot = obj_element_after_dot[0]
                     for p in obj_element_after_dot.productions:
+                        if p[0] not in checked:
+                            checked.append(p[0])
+                            toDo.append(p[0])
                         p.insert(0, '•')
                         if p not in newI.productions:
                             new_prod = prod_obj(obj_element_after_dot.name)
                             new_prod.productions.append(p)
-                            newI.productions.append(new_prod)                            
+                            newI.productions.append(new_prod)         
+
+            while toDo:
+                element = toDo.pop()
+                if element in not_terminals:
+                    obj_element = [prod for prod in self.productions if prod.name == element]
+                    if obj_element:
+                        obj_element = obj_element[0]
+                        for p in obj_element.productions:
+                            if p[0] not in checked:
+                                checked.append(p[0])
+                                toDo.append(p[0])
+                            p.insert(0, '•')
+                            if p not in newI.productions:
+                                new_prod = prod_obj(obj_element.name)
+                                new_prod.productions.append(p)
+                                newI.productions.append(new_prod)
+
+
             return newI
         else:
             return None
