@@ -15,6 +15,7 @@ class Parser:
         self.filename = filename
         self.tokens = []
         self.ignored_tokens = []
+        self.productions = []
     
     def clean_comments(self, joined):
         for index, line in enumerate(joined):
@@ -70,21 +71,56 @@ class Parser:
 
             elif line[0] and line[0][-1] == ':':
                 prod = prod_obj(line[0][:-1])
-                while splits[indx][0] != ';':
-                    list_ = [] 
-                    for element in splits[indx]:
+                if len(line) > 1:
+                    list_ = []
+                    for element in line[1:]:
                         if element == '|':
                             if list_:
                                 prod.productions.append(list_)
-                            list_ = []  
+                            list_ = []
+                        elif element[-1] == ';':
+                            if len(element) > 1:
+                                list_.append(element[:-1])
+                            else:
+                                if element and element != ';':
+                                    list_.append(element)
+                            if list_:
+                                prod.productions.append(list_)
+                            break
                         else:
                             list_.append(element)
-                    prod.productions.append(list_)
+                    self.productions.append(prod)
 
+                else:
+                    while True:
+                        list_ = []
+                        for element in splits[indx]:
+                            if element == '|':
+                                if list_:
+                                    prod.productions.append(list_)
+                                list_ = []
+                            elif element[-1] == ';':
+                                if len(element) > 1:
+                                    list_.append(element[:-1])
+                                else:
+                                    if element and element != ';':
+                                        list_.append(element)
+                                if list_:
+                                    prod.productions.append(list_)
+                                break
+                            else:
+                                list_.append(element)
+
+                        if element[-1] == ';':
+                            break
+                        else:
+                            prod.productions.append(list_)
+                            indx += 1
+
+                    self.productions.append(prod)
                     indx += 1
-                indx += 1
 
-        # a = 123
+
 
                 
                     
@@ -92,6 +128,7 @@ class Parser:
 if __name__ == "__main__":
     parser = Parser("sara_compis1_tools/slr-1.yalp")
     parser.set_values()
+    print(parser.tokens)
 
 
 
