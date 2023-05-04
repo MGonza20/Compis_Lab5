@@ -13,26 +13,15 @@ IGNORE WS
 
 %%
 
-yup: yup GRAMMAR | mmm;
-
-abc: abc GRAMMAR | wut | lol ;
-
-
 expression:
-    expression PLUS term | term | guacamole sandia melon ;
+    expression PLUS term
+  | term
+;
 term:
     term TIMES factor
   | factor
 ;
-
-term2:
-    term2 TIMES factor314
-  | factor34;
-
-term5:
-    term5 TIMES factor159
-  | factor15 ;
-
-
 factor:
-    LPAREN expression RPAREN | ID;
+    LPAREN expression RPAREN
+  | ID
+;
