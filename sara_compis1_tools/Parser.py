@@ -160,6 +160,15 @@ class Parser:
             return None
 
         augmented_production = augmented_production[0]
+
+        ## Setup inicial de prueba
+        # augmented_production = prod_obj('E')
+        
+        ## Prueba 1
+        # augmented_production.productions.append(['E', '+', '•', 'T'])
+
+        ## Prueba 2
+        # augmented_production.productions.append(['E', '•'])
         new_group = group_i(no)
         new_group.heart.append(augmented_production)
 
