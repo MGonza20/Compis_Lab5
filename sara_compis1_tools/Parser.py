@@ -8,7 +8,6 @@ class prod_obj:
     def __init__(self, name):
         self.name = name
         self.production = []
-        self.augmented = False
 
 class group_i:
     def __init__(self):
@@ -119,7 +118,7 @@ class Parser:
                     indx += 1
 
 
-    def process_element_productions(self, element, checked_elements, elements_to_process, new_group):
+    def process_element_productions(self, element, checked, to_do, new_group):
         
         element_productions = [prod for prod in self.productions if prod.name == element]
         if not element_productions:
@@ -127,10 +126,11 @@ class Parser:
 
         element_production = element_productions[0]
         for production in element_production.production:
+
             first_element = production[0]
-            if first_element not in checked_elements:
-                checked_elements.append(first_element)
-                elements_to_process.append(first_element)
+            if first_element not in checked:
+                checked.append(first_element)
+                to_do.append(first_element)
 
             production.insert(0, '•')
             if production not in new_group.productions:
@@ -146,33 +146,66 @@ class Parser:
         for heart_production in heart_prductions:
             new_group.heart.append(heart_production)
 
-        checked_elements = []
-        elements_to_process = []
+        checked = []
+        to_do = []
 
         for item in new_group.heart:
-            dot_index = item.production[0].index('•')
-            if dot_index +1 < len(item.production[0]):
-                element_after_dot = item.production[0][dot_index + 1]
-                checked_elements.append(element_after_dot)
-                self.process_element_productions(element_after_dot, checked_elements, elements_to_process, new_group)
+            dot_index = item.production.index('•')
+            if dot_index +1 < len(item.production):
+                element_after_dot = item.production[dot_index + 1]
+                checked.append(element_after_dot)
+                self.process_element_productions(element_after_dot, checked, to_do, new_group)
 
-        while elements_to_process:
-            element = elements_to_process.pop()
+        while to_do:
+            element = to_do.pop()
             if element in non_terminal_names:
-                self.process_element_productions(element, checked_elements, elements_to_process, new_group)
+                self.process_element_productions(element, checked, to_do, new_group)
+        
         return new_group
+    
+
+
+    def get_group_transitions(self, group):
+        transitions = set()
+        
+        for heart_s in group.heart:
+            aaaa = heart_s.production
+            dot_index = heart_s.production.index('•')
+            if dot_index + 1 < len(heart_s.production):
+                element_after_dot = heart_s.production[dot_index + 1]
+                transitions.add(element_after_dot)
+
+        for prod in group.productions:
+            dot_index = prod.production[0].index('•')
+            wut = prod.production
+            if dot_index + 1 < len(prod.production):
+                element_after_dot = prod.production[dot_index + 1]
+                transitions.add(element_after_dot)
+
+        return list(transitions)
+
 
 
     def construct_automata(self):
         first_prod = self.productions[0]
         augmented_p = prod_obj(f"{first_prod.name}'")
-        augmented_p.production.append(['•', first_prod.name])
-        augmented_p.augmented = True
-        self.productions.insert(0, augmented_p)
+        augmented_p.production = ['•', first_prod.name]
 
         groups = {}
-        groups[0] = self.closure([self.productions[0]])
-        a = 123
+        group_count = 0
+        groups[group_count] = self.closure([augmented_p])
+        group_count += 1
+        
+        transitions = self.get_group_transitions(groups[0])
+        for t in transitions:
+            new_group = self.go_to(groups[0].heart, t)
+            if new_group:
+                groups[group_count] = new_group
+                group_count += 1
+
+        aa = 1
+
+        
 
 
 
