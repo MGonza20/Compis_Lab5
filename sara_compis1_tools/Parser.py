@@ -7,12 +7,11 @@ class ruleLine:
 class prod_obj:
     def __init__(self, name):
         self.name = name
-        self.productions = []
+        self.production = []
         self.augmented = False
 
 class group_i:
-    def __init__(self, i_num):
-        self.i_num = i_num
+    def __init__(self):
         self.heart = []
         self.productions = []
 
@@ -113,29 +112,21 @@ class Parser:
                         if element[-1] == ';':
                             break
                         else:
-                            prod.productions.append(list_)
+                            prod.production.append(list_)
                             indx += 1
 
                     self.productions.append(prod)
                     indx += 1
 
 
-    def gen_aumented_grammar(self):
-        first_prod = self.productions[0]
-        augmented_grammar = prod_obj(f"{first_prod.name}'")
-        augmented_grammar.productions.append(['•', first_prod.name])
-        augmented_grammar.augmented = True
-        self.productions.insert(0, augmented_grammar)
-
-
-    def process_element_productions(self, element, checked_elements, elements_to_process, new_group, non_terminal_names):
+    def process_element_productions(self, element, checked_elements, elements_to_process, new_group):
         
         element_productions = [prod for prod in self.productions if prod.name == element]
         if not element_productions:
             return
 
         element_production = element_productions[0]
-        for production in element_production.productions:
+        for production in element_production.production:
             first_element = production[0]
             if first_element not in checked_elements:
                 checked_elements.append(first_element)
@@ -144,15 +135,14 @@ class Parser:
             production.insert(0, '•')
             if production not in new_group.productions:
                 new_prod_obj = prod_obj(element_production.name)
-                new_prod_obj.productions.append(production)
+                new_prod_obj.production = production
                 new_group.productions.append(new_prod_obj)
 
 
-
-    def closure(self, no, heart_prductions):
+    def closure(self, heart_prductions):
         non_terminal_names = list(set(prod.name for prod in self.productions))
 
-        new_group = group_i(no)
+        new_group = group_i()
         for heart_production in heart_prductions:
             new_group.heart.append(heart_production)
 
@@ -160,27 +150,36 @@ class Parser:
         elements_to_process = []
 
         for item in new_group.heart:
-            dot_index = item.productions[0].index('•')
-            if dot_index +1 < len(item.productions[0]):
-                element_after_dot = item.productions[0][dot_index + 1]
+            dot_index = item.production[0].index('•')
+            if dot_index +1 < len(item.production[0]):
+                element_after_dot = item.production[0][dot_index + 1]
                 checked_elements.append(element_after_dot)
-                self.process_element_productions(element_after_dot, checked_elements, elements_to_process, new_group, non_terminal_names)
+                self.process_element_productions(element_after_dot, checked_elements, elements_to_process, new_group)
 
         while elements_to_process:
             element = elements_to_process.pop()
             if element in non_terminal_names:
-                self.process_element_productions(element, checked_elements, elements_to_process, new_group, non_terminal_names)
-
+                self.process_element_productions(element, checked_elements, elements_to_process, new_group)
         return new_group
 
-                
-                    
+
+    def construct_automata(self):
+        first_prod = self.productions[0]
+        augmented_p = prod_obj(f"{first_prod.name}'")
+        augmented_p.production.append(['•', first_prod.name])
+        augmented_p.augmented = True
+        self.productions.insert(0, augmented_p)
+
+        groups = {}
+        groups[0] = self.closure([self.productions[0]])
+        a = 123
+
+
 
 if __name__ == "__main__":
     parser = Parser("sara_compis1_tools/slr-1.yalp")
     parser.set_values()
-    parser.gen_aumented_grammar()
-    # wut = parser.closure(0)
+    parser.construct_automata()
     print(parser.tokens)
 
 
