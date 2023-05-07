@@ -164,6 +164,27 @@ class Parser:
         return new_group
     
 
+    def go_to(self, group, element):
+        new_group = group_i()
+
+        for p_list in self.productions:
+            for p in p_list.production:
+                dot_index = p.index('•')
+                if dot_index + 1 < len(p) and p[dot_index + 1] == element:
+                    new_p = p.copy()
+                    new_p.pop(dot_index)
+                    new_p.insert(dot_index + 1, '•')
+                    new_prod_obj = prod_obj(p_list.name)
+                    new_prod_obj.production = new_p
+                    new_group.heart.append(new_prod_obj)
+        
+        res = self.closure(new_group.heart).productions
+        new_group.productions =  res if res else []
+
+        return new_group
+
+
+
 
     def get_group_transitions(self, group):
         transitions = set()
@@ -181,7 +202,6 @@ class Parser:
             if dot_index + 1 < len(prod.production):
                 element_after_dot = prod.production[dot_index + 1]
                 transitions.add(element_after_dot)
-
         return list(transitions)
 
 
@@ -199,11 +219,15 @@ class Parser:
         transitions = self.get_group_transitions(groups[0])
         for t in transitions:
             new_group = self.go_to(groups[0].heart, t)
-            if new_group:
+            if new_group.heart:
+                groups[group_count] = new_group
+                group_count += 1
+            elif new_group.heart and new_group.productions:
                 groups[group_count] = new_group
                 group_count += 1
 
         aa = 1
+
 
         
 
