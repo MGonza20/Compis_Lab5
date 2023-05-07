@@ -134,12 +134,10 @@ class Parser:
                 to_do.append(first_element)
 
             new_production = ['•'] + production
-            # production.insert(0, '•')
             if new_production not in new_group.productions:
                 new_prod_obj = prod_obj(element_production.name)
                 new_prod_obj.production = new_production
                 new_group.productions.append(new_prod_obj)
-                aa = 1
 
 
     def closure(self, heart_prductions):
@@ -169,24 +167,15 @@ class Parser:
 
     def go_to(self, group, element):
         new_group = group_i()
+        all_productions = [prod for prod in group.productions] + [prod for prod in group.heart]
 
-        for heart_s in group.heart:
-            dot_index = heart_s.production.index('•')
-            if dot_index + 1 < len(heart_s.production) and heart_s.production[dot_index + 1] == element:
-                new_p = heart_s.production.copy()
+        for p in all_productions:
+            dot_index = p.production.index('•')
+            if dot_index + 1 < len(p.production) and p.production[dot_index + 1] == element:
+                new_p = p.production.copy()
                 new_p.pop(dot_index)
                 new_p.insert(dot_index + 1, '•')
-                new_prod_obj = prod_obj(heart_s.name)
-                new_prod_obj.production = new_p
-                new_group.heart.append(new_prod_obj)
-
-        for prod in group.productions:
-            dot_index = prod.production[0].index('•')
-            if dot_index + 1 < len(prod.production) and prod.production[dot_index + 1] == element:
-                new_p = prod.production.copy()
-                new_p.pop(dot_index)
-                new_p.insert(dot_index + 1, '•')
-                new_prod_obj = prod_obj(prod.name)
+                new_prod_obj = prod_obj(p.name)
                 new_prod_obj.production = new_p
                 new_group.heart.append(new_prod_obj)
         
@@ -197,21 +186,16 @@ class Parser:
 
 
 
-
     def get_group_transitions(self, group):
         transitions = set()
+        all_productions = [prod for prod in group.productions] + [prod for prod in group.heart]
         
-        for heart_s in group.heart:
-            dot_index = heart_s.production.index('•')
-            if dot_index + 1 < len(heart_s.production):
-                element_after_dot = heart_s.production[dot_index + 1]
+        for p in all_productions:
+            dot_index = p.production.index('•')
+            if dot_index + 1 < len(p.production):
+                element_after_dot = p.production[dot_index + 1]
                 transitions.add(element_after_dot)
 
-        for prod in group.productions:
-            dot_index = prod.production[0].index('•')
-            if dot_index + 1 < len(prod.production):
-                element_after_dot = prod.production[dot_index + 1]
-                transitions.add(element_after_dot)
         return list(transitions)
 
 
@@ -220,7 +204,6 @@ class Parser:
 
 
     def repeated(self, obj, dict_repeated):
-        
         c_list = []
         for els in obj:
             list_ = [els.name] + els.production
@@ -232,7 +215,6 @@ class Parser:
                 return key
         return None
     
-
 
     def construct_automata(self):
         first_prod = self.productions[0]
@@ -262,8 +244,7 @@ class Parser:
                         groups[group_count] = new_group
                         dict_repeated[group_count] = new_group.heart
                         toDo.append(group_count)
-                        
-                        
+                                     
         aa = 1
 
 
