@@ -202,7 +202,6 @@ class Parser:
         transitions = set()
         
         for heart_s in group.heart:
-            aaaa = heart_s.production
             dot_index = heart_s.production.index('•')
             if dot_index + 1 < len(heart_s.production):
                 element_after_dot = heart_s.production[dot_index + 1]
@@ -210,12 +209,29 @@ class Parser:
 
         for prod in group.productions:
             dot_index = prod.production[0].index('•')
-            wut = prod.production
             if dot_index + 1 < len(prod.production):
                 element_after_dot = prod.production[dot_index + 1]
                 transitions.add(element_after_dot)
         return list(transitions)
 
+
+    def same_heart(self, lista1, lista2):
+        return len(lista1) == len(lista2) and all(item in lista2 for item in lista1)
+
+
+    def repeated(self, obj, dict_repeated):
+        
+        c_list = []
+        for els in obj:
+            list_ = [els.name] + els.production
+            c_list.append(list_)
+
+        for key, value in dict_repeated.items():
+            reps_values = [[v.name] + v.production for v in value]
+            if self.same_heart(reps_values, c_list):
+                return key
+        return None
+    
 
 
     def construct_automata(self):
@@ -225,19 +241,33 @@ class Parser:
 
         groups = {}
         group_count = 0
-        groups[group_count] = self.closure([augmented_p])
-        group_count += 1
-        
-        transitions = self.get_group_transitions(groups[0])
-        for t in transitions:
-            new_group = self.go_to(groups[0], t)
-            if new_group.heart:
-                groups[group_count] = new_group
-                group_count += 1
-            elif new_group.heart and new_group.productions:
-                groups[group_count] = new_group
-                group_count += 1
+        augmented_prod = self.closure([augmented_p])
+        groups[group_count] = augmented_prod
+        toDo = [group_count]
 
+        dict_repeated = {}
+        dict_repeated[group_count] = augmented_prod.heart
+        # for ht in groups[group_count].heart:
+        #     dict_repeated[group_count] = []
+        #     dict_repeated[group_count] += new_group.heart
+
+        
+        while toDo:
+            no = toDo.pop()
+            transitions = self.get_group_transitions(groups[no])
+            for t in transitions:
+                new_group = self.go_to(groups[no], t)
+        
+                if new_group.heart:
+                    existing_group_no = self.repeated(new_group.heart, dict_repeated)
+                    
+                    if not existing_group_no:
+                        group_count += 1
+                        groups[group_count] = new_group
+                        dict_repeated[group_count] = new_group.heart
+                        toDo.append(group_count)
+                        
+                        
         aa = 1
 
 
