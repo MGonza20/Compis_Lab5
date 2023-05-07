@@ -247,10 +247,6 @@ class Parser:
 
         dict_repeated = {}
         dict_repeated[group_count] = augmented_prod.heart
-        # for ht in groups[group_count].heart:
-        #     dict_repeated[group_count] = []
-        #     dict_repeated[group_count] += new_group.heart
-
         
         while toDo:
             no = toDo.pop()
