@@ -299,25 +299,21 @@ class Parser:
         non_terminal = list(set(prod.name for prod in self.productions))
         all_prods = [[prod.name] + p for prod in self.productions for p in prod.production]
 
-        first = {}
+        firsts = {}
         for nt in non_terminal:
-            first[nt] = set()
-            to_analize = []
-            for p in all_prods:
-                if len(p) > 1 and p[0] == nt:
-                    for el in p[1:]:
-                        to_analize.append(p[1])
+            firsts[nt] = set()
+            to_analyze = {p[1] for p in all_prods if len(p) > 1 and p[0] == nt}
 
-            while to_analize:
-                a = to_analize.pop()
+            while to_analyze:
+                a = to_analyze.pop()
                 if a not in non_terminal:
-                    first[nt].add(a)
+                    firsts[nt].add(a)
                 else:
                     for p in all_prods:
                         if len(p) > 1 and p[0] == a:
-                            to_analize.append(p[1])
+                            to_analyze.add(p[1])
+        return firsts
 
-        a = []
                 
         
 
