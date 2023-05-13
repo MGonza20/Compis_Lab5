@@ -295,24 +295,28 @@ class Parser:
         dot.render('x/automata_x', format='png')
 
 
-    def first(self):
+    def first(self, element):
         non_terminal = list(set(prod.name for prod in self.productions))
         all_prods = [[prod.name] + p for prod in self.productions for p in prod.production]
 
-        firsts = {}
-        for nt in non_terminal:
-            firsts[nt] = set()
-            to_analyze = {p[1] for p in all_prods if len(p) > 1 and p[0] == nt}
+        values = set()
+        to_analyze = {p[1] for p in all_prods if len(p) > 1 and p[0] == element}
 
-            while to_analyze:
-                a = to_analyze.pop()
-                if a not in non_terminal:
-                    firsts[nt].add(a)
-                else:
-                    for p in all_prods:
-                        if len(p) > 1 and p[0] == a:
-                            to_analyze.add(p[1])
-        return firsts
+        while to_analyze:
+            a = to_analyze.pop()
+            if a not in non_terminal:
+                values.add(a)
+            else:
+                for p in all_prods:
+                    if len(p) > 1 and p[0] == a:
+                        to_analyze.add(p[1])
+        return values
+    
+
+    def all_first(self):
+        non_terminal = list(set(prod.name for prod in self.productions))
+        return {nt: self.first(nt) for nt in non_terminal}
+
 
                 
         
@@ -324,7 +328,8 @@ if __name__ == "__main__":
     parser.set_values()
     # wut = parser.construct_automata()
     # parser.draw_automata_p(wut)
-    parser.first()
+    wut = parser.all_first()
+    a = 1
 
 
 
