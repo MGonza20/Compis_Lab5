@@ -1,4 +1,8 @@
 
+import networkx as nx
+from graphviz import Digraph
+
+
 class ruleLine:
     def __init__(self, line_no, line):
         self.line_no = line_no
@@ -13,6 +17,7 @@ class group_i:
     def __init__(self):
         self.heart = []
         self.productions = []
+        self.transitions = {}
 
 
 class Parser:
@@ -244,8 +249,40 @@ class Parser:
                         groups[group_count] = new_group
                         dict_repeated[group_count] = new_group.heart
                         toDo.append(group_count)
+                        groups[no].transitions[t] = group_count
+
+                    else:
+                        groups[no].transitions[t] = existing_group_no
+
+        return groups
+
                                      
-        aa = 1
+    def draw_automata_p(self, automata):
+        G = nx.MultiDiGraph()
+        for no, state in automata.items():
+            h_list = [(p.name, '→', ' '.join(p.production)) for p in state.heart]
+            h_list = [' '.join(h) for h in h_list]
+            h_list = '<BR/>'.join(h_list)
+            p_list = [(p.name, '→', ' '.join(p.production)) for p in state.productions]
+            p_list = [' '.join(p) for p in p_list]
+            p_list = '<BR/>'.join(p_list)
+            G.add_node(str(no), h_list=h_list, p_list=p_list)
+
+            for transition, final_dest in state.transitions.items():
+                G.add_node(str(final_dest))
+                G.add_edge(str(no), str(final_dest), label=transition, dir='forward')
+
+        dot = Digraph()
+        for u, v, data in G.edges(data=True):
+            dot.edge(u, v, label=data['label'], dir=data['dir'])
+        for node in G.nodes:
+            attrs = G.nodes[node]
+            dot.node(node, '''<
+            <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+                <TR><TD>{0}</TD></TR>
+                <TR><TD>{1}</TD></TR>
+            </TABLE>>'''.format(attrs['h_list'], attrs['p_list']), shape='none')
+        dot.render('x/automata_x', format='png')
 
 
         
@@ -255,8 +292,8 @@ class Parser:
 if __name__ == "__main__":
     parser = Parser("sara_compis1_tools/slr-1.yalp")
     parser.set_values()
-    parser.construct_automata()
-    print(parser.tokens)
+    wut = parser.construct_automata()
+    parser.draw_automata_p(wut)
 
 
 

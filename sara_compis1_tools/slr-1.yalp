@@ -4,12 +4,11 @@
 /* T → T ∗ F | F */
 /* F → ( E ) | id */
 
-%token id
+%token i
 %token +
+%token (
+%token )
 %token *
-%token ( )
-%token WS
-IGNORE WS
 
 %%
 
@@ -23,5 +22,5 @@ T:
 ;
 F:
     ( E )
-  | id
+  | i
 ;
