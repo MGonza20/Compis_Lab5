@@ -253,6 +253,11 @@ class Parser:
 
                     else:
                         groups[no].transitions[t] = existing_group_no
+                
+        for no, new_group in groups.items():
+            for h in new_group.heart:
+                if h.name[-1] == "'" and h.production[-1] == '•':
+                    groups[no].transitions['$'] = 'aceptar'
 
         return groups
 
@@ -273,15 +278,20 @@ class Parser:
                 G.add_edge(str(no), str(final_dest), label=transition, dir='forward')
 
         dot = Digraph()
+        dot.attr(rankdir='LR') 
+        dot.attr(splines='polyline') 
         for u, v, data in G.edges(data=True):
             dot.edge(u, v, label=data['label'], dir=data['dir'])
         for node in G.nodes:
-            attrs = G.nodes[node]
-            dot.node(node, '''<
-            <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-                <TR><TD>{0}</TD></TR>
-                <TR><TD>{1}</TD></TR>
-            </TABLE>>'''.format(attrs['h_list'], attrs['p_list']), shape='none')
+            if node == 'aceptar':
+                dot.node(node, shape='none')
+            else:
+                attrs = G.nodes[node]
+                dot.node(node, '''<
+                <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+                    <TR><TD>{0}</TD></TR>
+                    <TR><TD BGCOLOR="lightgrey">{1}</TD></TR>  
+                </TABLE>>'''.format(attrs['h_list'], attrs['p_list']), shape='none')
         dot.render('x/automata_x', format='png')
 
 
