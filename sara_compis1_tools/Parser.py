@@ -295,6 +295,30 @@ class Parser:
         dot.render('x/automata_x', format='png')
 
 
+    def first(self):
+        non_terminal = list(set(prod.name for prod in self.productions))
+        all_prods = [[prod.name] + p for prod in self.productions for p in prod.production]
+
+        first = {}
+        for nt in non_terminal:
+            first[nt] = set()
+            to_analize = []
+            for p in all_prods:
+                if len(p) > 1 and p[0] == nt:
+                    for el in p[1:]:
+                        to_analize.append(p[1])
+
+            while to_analize:
+                a = to_analize.pop()
+                if a not in non_terminal:
+                    first[nt].add(a)
+                else:
+                    for p in all_prods:
+                        if len(p) > 1 and p[0] == a:
+                            to_analize.append(p[1])
+
+        a = []
+                
         
 
 
@@ -302,8 +326,9 @@ class Parser:
 if __name__ == "__main__":
     parser = Parser("sara_compis1_tools/slr-1.yalp")
     parser.set_values()
-    wut = parser.construct_automata()
-    parser.draw_automata_p(wut)
+    # wut = parser.construct_automata()
+    # parser.draw_automata_p(wut)
+    parser.first()
 
 
 
