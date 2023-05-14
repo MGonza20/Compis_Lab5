@@ -387,7 +387,7 @@ class Lexer:
 
                 mega_content.append(new_afd)
                 count += len(new_afd)
-        return mega_content, errors
+        return mega_content, errors, done
     
 
     def unify(self, mega_content):
@@ -425,12 +425,12 @@ if __name__ == '__main__':
     #     sys.exit(1)
 
     # yal_file = sys.argv[1]
-    # yal_file = "sara_compis1_tools/con1.yal"
-    yal_file = "con1.yal"
+    # yal_file = "sara_compis1_tools/con1_1.yal"
+    yal_file = "con1_1.yal"
     lexer = Lexer(yal_file)
     
     lexer.read()
-    mega_content, errors = lexer.generate_automatas()
+    mega_content, errors, done = lexer.generate_automatas()
     mega_automata = lexer.unify(mega_content)
     lexer.change_values(mega_automata)
 
@@ -463,11 +463,11 @@ if __name__ == '__main__':
         file.write("class Generated:\n")
         file.write("\tdef return_tokens(self):\n")
         file.write("\t\treturn [")
-        for indx, token in enumerate(lexer.tokens):
-            if indx == len(lexer.tokens) - 1:
-                file.write(f"'{token.name}'")
+        for indx, token in enumerate(done):
+            if indx == len(done) - 1:
+                file.write(f"'{token}'")
             else:
-                file.write(f"'{token.name}',")
+                file.write(f"'{token}',")
         file.write("]\n\n")
 
         file.write("\tdef parse(self):\n")

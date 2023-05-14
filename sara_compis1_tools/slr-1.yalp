@@ -4,14 +4,18 @@
 /* T → T ∗ F | F */
 /* F → ( E ) | id */
 
-%token i
+/* Definición de tokens */
+%token id
 %token +
 %token (
 %token )
 %token *
+%token espacioEnBlanco
+IGNORE espacioEnBlanco
 
 %%
 
+/* Definición de la gramática */
 E:
     T E'
 ;

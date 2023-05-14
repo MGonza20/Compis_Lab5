@@ -1,0 +1,15 @@
+
+(* Archivo 1 *)
+
+let delimitador = [' ''\t''\n']
+let espacioEnBlanco = delimitador+
+let id = letra(letra|digito)*
+
+rule tokens =
+    espacioEnBlanco	{ } (* Ignorar espacios en blanco *)
+  | id	{ print("id\n") }
+  | '+'		{ print("+\n") }
+  | '('	{ print("(\n") }
+  | ')'		{ print(")\n") }
+  | '*'				{ print("*\n") }
+
