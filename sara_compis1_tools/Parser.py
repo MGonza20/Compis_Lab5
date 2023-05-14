@@ -300,6 +300,9 @@ class Parser:
         all_prods = [[prod.name] + p for prod in self.productions for p in prod.production]
 
         values = set()
+        if element not in non_terminal:
+            values.add(element)
+
         to_analyze = {p[1] for p in all_prods if len(p) > 1 and p[0] == element}
 
         while to_analyze:
@@ -316,6 +319,58 @@ class Parser:
     def all_first(self):
         non_terminal = list(set(prod.name for prod in self.productions))
         return {nt: self.first(nt) for nt in non_terminal}
+    
+
+    def follow(self, element, init=False):
+        non_terminal = []
+        for prod in self.productions:
+            if prod.name not in non_terminal:
+                non_terminal.append(prod.name)
+        first = non_terminal[0]
+        all_prods = [[prod.name] + p for prod in self.productions for p in prod.production]
+
+        values = set()
+        if init:
+            values.add('$')
+        element_indexes =  []
+        for i, p in enumerate(all_prods):
+            if element in p[1:]:
+                element_indexes.append((i, p[1:].index(element)+1))
+        for arr_indx, list_pos in element_indexes:
+            if list_pos + 1 == len(all_prods[arr_indx]) -1:
+                betha = all_prods[arr_indx][list_pos + 1]
+                betha_first = self.first(betha)
+                betha_first.discard('ε')
+                values.update(betha_first)
+            elif list_pos == len(all_prods[arr_indx]) - 1:
+                A = all_prods[arr_indx][0]
+                A_follow = self.follow(A, init=True) if A == first else self.follow(A)
+                A_follow.discard('ε')
+                values.update(A_follow)
+            # elif list_pos + 1 < len(all_prods[arr_indx]) and 'ε' in self.first(all_prods[arr_indx][list_pos + 1]):
+            #     A = all_prods[arr_indx][0]
+            #     A_follow = self.follow(A)
+            #     A_follow.discard('ε')
+            #     values.update(A_follow)
+        return values
+    
+
+    def all_follows(self):
+        non_terminal = []
+        for prod in self.productions:
+            if prod.name not in non_terminal:
+                non_terminal.append(prod.name)
+
+        follows = {}
+        for i, nt in enumerate(non_terminal):
+            if i:
+                follows[nt] = self.follow(nt)
+            else:
+                follows[nt] = self.follow(nt, init=True)
+
+        return follows
+
+
 
 
                 
@@ -328,7 +383,8 @@ if __name__ == "__main__":
     parser.set_values()
     # wut = parser.construct_automata()
     # parser.draw_automata_p(wut)
-    wut = parser.all_first()
+    # wut = parser.all_first()
+    wut2 = parser.all_follows()
     a = 1
 
 
