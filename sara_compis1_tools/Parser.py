@@ -145,6 +145,14 @@ class Parser:
                 new_group.productions.append(new_prod_obj)
 
 
+    def get_non_terminal(self):
+        non_terminal = []
+        for prod in self.productions:
+            if prod.name not in non_terminal:
+                non_terminal.append(prod.name)
+        return non_terminal        
+
+
     def closure(self, heart_prductions):
         non_terminal_names = list(set(prod.name for prod in self.productions))
 
@@ -321,38 +329,43 @@ class Parser:
         return {nt: self.first(nt) for nt in non_terminal}
     
 
-    def follow(self, element, init=False):
-        non_terminal = []
-        for prod in self.productions:
-            if prod.name not in non_terminal:
-                non_terminal.append(prod.name)
-        first = non_terminal[0]
+    def follow(self, element, init=False, results=None):
         all_prods = [[prod.name] + p for prod in self.productions for p in prod.production]
+        non_terminal = self.get_non_terminal()
+        first = non_terminal[0]
 
-        values = set()
-        if init:
-            values.add('$')
+        if not results:
+            results = {nt: set() for nt in non_terminal}
+
+        if element in results and results[element]:
+            return results[element]
+
+
         element_indexes =  []
         for i, p in enumerate(all_prods):
             if element in p[1:]:
                 element_indexes.append((i, p[1:].index(element)+1))
-        for arr_indx, list_pos in element_indexes:
-            if list_pos + 1 == len(all_prods[arr_indx]) -1:
-                betha = all_prods[arr_indx][list_pos + 1]
+
+        if init:
+            results[first].add('$')
+
+        for no_list, pos in element_indexes:
+            if pos+1 == len(all_prods[no_list])-1:
+                betha = all_prods[no_list][-1]
                 betha_first = self.first(betha)
-                betha_first.discard('ε')
-                values.update(betha_first)
-            elif list_pos == len(all_prods[arr_indx]) - 1:
-                A = all_prods[arr_indx][0]
-                A_follow = self.follow(A, init=True) if A == first else self.follow(A)
-                A_follow.discard('ε')
-                values.update(A_follow)
-            # elif list_pos + 1 < len(all_prods[arr_indx]) and 'ε' in self.first(all_prods[arr_indx][list_pos + 1]):
-            #     A = all_prods[arr_indx][0]
-            #     A_follow = self.follow(A)
-            #     A_follow.discard('ε')
-            #     values.update(A_follow)
-        return values
+                results[element] = results[element].union(betha_first)
+
+            if pos == len(all_prods[no_list])-1:
+                A = all_prods[no_list][0]
+                follow_A = self.follow(A, init=True, results=results) \
+                           if A == first else self.follow(A, results=results)
+                if follow_A:
+                    results[element] = results[element].union(follow_A)
+            
+
+        return results[element]
+
+        
     
 
     def all_follows(self):
