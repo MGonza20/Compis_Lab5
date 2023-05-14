@@ -1,6 +1,6 @@
 /* Configuración del parser para gramática */
 
-/* Definición de tokens */
+/* Definición de tokens 
 %token id
 %token +
 %token (
@@ -11,7 +11,9 @@ IGNORE espacioEnBlanco
 
 %%
 
-/* Definición de la gramática */
+%token espacioEnBlanco
+
+ Definición de la gramática */
 E:
     E + T
   | T

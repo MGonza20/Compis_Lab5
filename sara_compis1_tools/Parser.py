@@ -41,9 +41,38 @@ class Parser:
                     i += 1
             joined[index] = line_wo_comment
         return joined
+    
+
+    def analyze_yapar(self):
+        lines = self.getLines(yapar=True)
+        errors = [] 
+
+        for index, line in enumerate(lines, start=1):
+            if line.count('/*') != line.count('*/'):
+                errors.append(('Error en la linea ' + str(index) + ':\n Error en comentario', index))
+
+        splits = [line.split(' ') for line in lines]
+        splits = self.remove_spaces_list(splits)
+
+        separator = [indx for indx, line in enumerate(splits) if line and line[0] == '%%']
+        if separator:
+            if len(separator) > 1:
+                errors.append('Error: Hay mas de un separador %%')
+            elif len(separator) == 1:        
+                for i_line, line in enumerate(splits, start=1):
+                    if line and line[0] == '%token' and i_line > separator[0]:
+                        errors.append(('Error en la linea ' + str(i_line) + ':\n No es valido declarar tokens luego del separador %%', i_line))
+        else:
+            errors.append('Error: No hay separador %%')
+
+        
+
+        return errors
 
 
-    def getLines(self):
+
+
+    def getLines(self, yapar=False):
         f = open(self.filename, "r", encoding="utf-8")
         lines = f.readlines()
         f.close()
@@ -51,8 +80,11 @@ class Parser:
         lines_with_n = [n[:-1] if n[-1] == '\n' else n for n in lines]
         check_comments = [lll.split(' ') for lll in lines_with_n]  
         joined = [' '.join(line) for line in check_comments]
-            
-        return self.clean_comments(joined)
+        
+        if not yapar:
+            return self.clean_comments(joined)
+        else:
+            return joined
     
 
     def remove_spaces_list(self, lines):
@@ -406,10 +438,11 @@ class Parser:
 
 if __name__ == "__main__":
     parser = Parser("sara_compis1_tools/srl-2.yalp")
-    parser.set_values()
-    wut = parser.construct_automata()
+    parser.analyze_yapar()
+    # parser.set_values()
+    # wut = parser.construct_automata()
     # parser.draw_automata_p(wut)
-    wut = parser.all_first()
+    # wut = parser.all_first()
     # wut2 = parser.all_follows()
     a = 1
 
