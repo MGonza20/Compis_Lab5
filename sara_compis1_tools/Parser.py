@@ -351,8 +351,8 @@ class Parser:
 
         for no_list, pos in element_indexes:
             
-            betha = all_prods[no_list][-1]
-            if pos+1 == len(all_prods[no_list])-1:
+            if pos+1 <= len(all_prods[no_list])-1:
+                betha = all_prods[no_list][pos+1]
                 betha_first = self.first(betha)
                 if 'ε' in betha_first:
                     betha_first.remove('ε')
@@ -367,7 +367,7 @@ class Parser:
                         follow_A.remove('ε')
                     results[element] = results[element].union(follow_A)
 
-            if pos+1 == len(all_prods[no_list])-1 and 'ε' in self.first(betha):
+            if pos+1 <= len(all_prods[no_list])-1 and 'ε' in self.first(all_prods[no_list][pos+1]):
                 A = all_prods[no_list][0]
                 follow_A = self.follow(A, init=True, results=results) \
                            if A == first else self.follow(A, results=results)
