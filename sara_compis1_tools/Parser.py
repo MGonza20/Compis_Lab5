@@ -315,14 +315,16 @@ class Parser:
             values.add(element)
 
         to_analyze = {p[1] for p in all_prods if len(p) > 1 and p[0] == element}
+        done = set()
 
         while to_analyze:
             a = to_analyze.pop()
             if a not in non_terminal:
                 values.add(a)
             else:
+                done.add(a)
                 for p in all_prods:
-                    if len(p) > 1 and p[0] == a:
+                    if len(p) > 1 and p[0] == a and p[1] not in done:
                         to_analyze.add(p[1])
         return values
     
@@ -403,12 +405,12 @@ class Parser:
 
 
 if __name__ == "__main__":
-    parser = Parser("sara_compis1_tools/slr-1.yalp")
+    parser = Parser("sara_compis1_tools/srl-2.yalp")
     parser.set_values()
     wut = parser.construct_automata()
     # parser.draw_automata_p(wut)
-    # wut = parser.all_first()
-    wut2 = parser.all_follows()
+    wut = parser.all_first()
+    # wut2 = parser.all_follows()
     a = 1
 
 
