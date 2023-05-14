@@ -354,6 +354,8 @@ class Parser:
             betha = all_prods[no_list][-1]
             if pos+1 == len(all_prods[no_list])-1:
                 betha_first = self.first(betha)
+                if 'ε' in betha_first:
+                    betha_first.remove('ε')
                 results[element] = results[element].union(betha_first)
 
             if pos == len(all_prods[no_list])-1:
