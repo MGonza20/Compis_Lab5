@@ -122,6 +122,9 @@ class Parser:
                     self.productions.append(prod)
                     indx += 1
 
+    def return_tokens(self):
+        self.set_values()
+        return self.tokens + self.ignored_tokens
 
     def process_element_productions(self, element, checked, to_do, new_group):
         
