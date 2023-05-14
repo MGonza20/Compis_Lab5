@@ -2,7 +2,6 @@
 
 /* Definición de tokens 
 %token id
-%token +
 %token (
 %token )
 %token *

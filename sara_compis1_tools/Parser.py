@@ -56,16 +56,27 @@ class Parser:
 
         separator = [indx for indx, line in enumerate(splits) if line and line[0] == '%%']
         if separator:
-            if len(separator) > 1:
-                errors.append('Error: Hay mas de un separador %%')
-            elif len(separator) == 1:        
-                for i_line, line in enumerate(splits, start=1):
-                    if line and line[0] == '%token' and i_line > separator[0]:
-                        errors.append(('Error en la linea ' + str(i_line) + ':\n No es valido declarar tokens luego del separador %%', i_line))
-        else:
-            errors.append('Error: No hay separador %%')
+            for i_line, line in enumerate(splits, start=1):
+                if line and line[0] == '%token' and i_line > separator[0]:
+                    errors.append(('Error en la linea ' + str(i_line) + ':\n No es valido declarar tokens luego del separador %%', i_line))
 
-        
+        self.set_values()
+        non_terminals = self.get_non_terminal()
+
+        for indx, line in enumerate(splits, start=1):
+            if line[0] and line[0][-1] == ':':
+                prod = prod_obj(line[0][:-1])
+
+                while True:
+                    prod, element, list_ = self.process_elements(splits[indx], prod, multiple_r=True)
+                    if element[-1] == ';':
+                        break
+                    else:
+                        indx += 1
+                        for element in list_:
+                            if element not in non_terminals and element not in self.tokens and element != '|':
+                                errors.append(('Error en la linea ' + str(indx) + ':\n El token ' + element + ' no esta declarado', indx))
+                indx += 1
 
         return errors
 
@@ -438,12 +449,12 @@ class Parser:
 
 if __name__ == "__main__":
     parser = Parser("sara_compis1_tools/srl-2.yalp")
-    parser.analyze_yapar()
+    err = parser.analyze_yapar()
     # parser.set_values()
     # wut = parser.construct_automata()
     # parser.draw_automata_p(wut)
     # wut = parser.all_first()
-    # wut2 = parser.all_follows()
+    wut2 = parser.all_follows()
     a = 1
 
 
