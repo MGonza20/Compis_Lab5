@@ -340,7 +340,6 @@ class Parser:
         if element in results and results[element]:
             return results[element]
 
-
         element_indexes =  []
         for i, p in enumerate(all_prods):
             if element in p[1:]:
@@ -354,8 +353,7 @@ class Parser:
             if pos+1 <= len(all_prods[no_list])-1:
                 betha = all_prods[no_list][pos+1]
                 betha_first = self.first(betha)
-                if 'ε' in betha_first:
-                    betha_first.remove('ε')
+                betha_first.discard('ε')
                 results[element] = results[element].union(betha_first)
 
             if pos == len(all_prods[no_list])-1:
@@ -372,16 +370,12 @@ class Parser:
                 follow_A = self.follow(A, init=True, results=results) \
                            if A == first else self.follow(A, results=results)
                 if follow_A:
-                    if 'ε' in follow_A:
-                        follow_A.remove('ε')
+                    follow_A.discard('ε')
                     results[element] = results[element].union(follow_A)
             
-
         return results[element]
 
         
-    
-
     def all_follows(self):
         non_terminal = []
         for prod in self.productions:
@@ -408,7 +402,7 @@ class Parser:
 if __name__ == "__main__":
     parser = Parser("sara_compis1_tools/slr-1.yalp")
     parser.set_values()
-    # wut = parser.construct_automata()
+    wut = parser.construct_automata()
     # parser.draw_automata_p(wut)
     # wut = parser.all_first()
     wut2 = parser.all_follows()
