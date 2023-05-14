@@ -420,11 +420,13 @@ class Lexer:
     
 if __name__ == '__main__':
 
-    if len(sys.argv) < 2:
-        print("Por favor ingrese el archivo .yal")
-        sys.exit(1)
+    # if len(sys.argv) < 2:
+    #     print("Por favor ingrese el archivo .yal")
+    #     sys.exit(1)
 
-    yal_file = sys.argv[1]
+    # yal_file = sys.argv[1]
+    # yal_file = "sara_compis1_tools/con1.yal"
+    yal_file = "con1.yal"
     lexer = Lexer(yal_file)
     
     lexer.read()
@@ -458,14 +460,20 @@ if __name__ == '__main__':
         else:
             file.write("errors = set()\n\n")
 
-        file.write("if len(sys.argv) < 2:\n\tprint('Por favor ingrese el archivo plano')\n\tsys.exit(1)\n")
-        file.write("txt_file = sys.argv[1]\n\n")
-        file.write("lex = LexEval(txt_file)\n")
+        file.write("class Generated:\n")
+        file.write("\tdef return_tokens(self):\n")
+        file.write("\t\treturn [")
+        for indx, token in enumerate(lexer.tokens):
+            if indx == len(lexer.tokens) - 1:
+                file.write(f"'{token.name}'")
+            else:
+                file.write(f"'{token.name}',")
+        file.write("]\n\n")
 
-        file.write("results = lex.evaluate(mega, errors)\n")
-        file.write("lex.print_tokens(results)\n\n")
+        file.write("\tdef parse(self):\n")
+        file.write("\t\tif len(sys.argv) < 2:\n\t\t\tprint('Por favor ingrese el archivo plano')\n\t\t\tsys.exit(1)\n")
+        file.write("\t\ttxt_file = sys.argv[1]\n\n")
+        file.write("\t\tlex = LexEval(txt_file)\n")
 
-        file.write("from sara_compis1_tools.Visualizer import Visualizer\n")
-        file.write("v = Visualizer()\n")
-        file.write("v.draw_mega_afd(mega)\n")
-
+        file.write("\t\tresults = lex.evaluate(mega, errors)\n")
+        file.write("\t\tlex.print_tokens(results)\n\n")
