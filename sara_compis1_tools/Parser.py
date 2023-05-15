@@ -293,24 +293,25 @@ class Parser:
             no = toDo.pop()
             transitions = self.get_group_transitions(groups[no])
             for t in transitions:
-                new_group = self.go_to(groups[no], t)
-        
-                if new_group.heart:
-                    existing_group_no = self.repeated(new_group.heart, dict_repeated)
-                    
-                    if not existing_group_no:
-                        group_count += 1
-                        groups[group_count] = new_group
-                        dict_repeated[group_count] = new_group.heart
-                        toDo.append(group_count)
-                        groups[no].transitions[t] = group_count
+                if t != 'ε':
+                    new_group = self.go_to(groups[no], t)
+            
+                    if new_group.heart:
+                        existing_group_no = self.repeated(new_group.heart, dict_repeated)
+                        
+                        if not existing_group_no:
+                            group_count += 1
+                            groups[group_count] = new_group
+                            dict_repeated[group_count] = new_group.heart
+                            toDo.append(group_count)
+                            groups[no].transitions[t] = group_count
 
-                    else:
-                        groups[no].transitions[t] = existing_group_no
+                        else:
+                            groups[no].transitions[t] = existing_group_no
                 
         for no, new_group in groups.items():
             for h in new_group.heart:
-                if h.name[-1] == "'" and h.production[-1] == '•':
+                if h.name == augmented_p.name  and h.production[-1] == '•':
                     groups[no].transitions['$'] = 'aceptar'
 
         return groups
