@@ -1,12 +1,21 @@
 
+import sys
 
 from generated import Generated
 from Parser import Parser
 
+
+if len(sys.argv) < 2:
+    print('Por favor ingrese el archivo plano')
+    sys.exit(1)
+yal_file = sys.argv[1]
+
+
+
 g = Generated()
 tokens_scanner = set(g.return_tokens())
 
-p = Parser('sara_compis1_tools/slr-2-ok.yalp')
+p = Parser(yal_file)
 tokens_parser = set(p.return_tokens())
 
 
@@ -16,12 +25,12 @@ all_errors = []
 for error_message, indx in errors:
     all_errors.append(error_message)
 if set(tokens_scanner) != set(tokens_parser):
-    all_errors.append('Error: Los tokens no son iguales en el scanner y el parser')
+    all_errors.insert(0, 'Error:\nLos tokens no son iguales en el scanner y el parser')
 
 
 if all_errors:
-    print('\nErrores encontrados en archivo .yalp:\n')
-    for error_message, indx in errors:
+    print()
+    for error_message in all_errors:
         print(f'{error_message}\n')
 else:    
     auto = p.construct_automata()
