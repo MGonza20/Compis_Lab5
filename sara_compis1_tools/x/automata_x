@@ -1,0 +1,113 @@
+digraph {
+	rankdir=LR
+	splines=polyline
+	0 -> 1 [label=id dir=forward]
+	0 -> 2 [label=T dir=forward]
+	0 -> 3 [label=F dir=forward]
+	0 -> 4 [label="(" dir=forward]
+	0 -> 5 [label=E dir=forward]
+	2 -> 12 [label="E'" dir=forward]
+	2 -> 13 [label="+" dir=forward]
+	3 -> 8 [label="T'" dir=forward]
+	3 -> 9 [label="*" dir=forward]
+	4 -> 1 [label=id dir=forward]
+	4 -> 2 [label=T dir=forward]
+	4 -> 3 [label=F dir=forward]
+	4 -> 4 [label="(" dir=forward]
+	4 -> 6 [label=E dir=forward]
+	5 -> aceptar [label="$" dir=forward]
+	13 -> 3 [label=F dir=forward]
+	13 -> 1 [label=id dir=forward]
+	13 -> 4 [label="(" dir=forward]
+	13 -> 14 [label=T dir=forward]
+	9 -> 4 [label="(" dir=forward]
+	9 -> 1 [label=id dir=forward]
+	9 -> 10 [label=F dir=forward]
+	6 -> 7 [label=")" dir=forward]
+	10 -> 11 [label="T'" dir=forward]
+	10 -> 9 [label="*" dir=forward]
+	14 -> 15 [label="E'" dir=forward]
+	14 -> 13 [label="+" dir=forward]
+	15 -> aceptar [label="$" dir=forward]
+	0 [label=<
+                <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+                    <TR><TD>E' → • E</TD></TR>
+                    <TR><TD BGCOLOR="lightgrey">E → • T E'<BR/>T → • F T'<BR/>F → • ( E )<BR/>F → • id</TD></TR>  
+                </TABLE>> shape=none]
+	1 [label=<
+                <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+                    <TR><TD>F → id •</TD></TR>
+                    <TR><TD BGCOLOR="lightgrey"></TD></TR>  
+                </TABLE>> shape=none]
+	2 [label=<
+                <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+                    <TR><TD>E → T • E'</TD></TR>
+                    <TR><TD BGCOLOR="lightgrey">E' → • + T E'<BR/>E' → • ε</TD></TR>  
+                </TABLE>> shape=none]
+	3 [label=<
+                <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+                    <TR><TD>T → F • T'</TD></TR>
+                    <TR><TD BGCOLOR="lightgrey">T' → • * F T'<BR/>T' → • ε</TD></TR>  
+                </TABLE>> shape=none]
+	4 [label=<
+                <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+                    <TR><TD>F → ( • E )</TD></TR>
+                    <TR><TD BGCOLOR="lightgrey">E → • T E'<BR/>T → • F T'<BR/>F → • ( E )<BR/>F → • id</TD></TR>  
+                </TABLE>> shape=none]
+	5 [label=<
+                <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+                    <TR><TD>E' → E •</TD></TR>
+                    <TR><TD BGCOLOR="lightgrey"></TD></TR>  
+                </TABLE>> shape=none]
+	12 [label=<
+                <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+                    <TR><TD>E → T E' •</TD></TR>
+                    <TR><TD BGCOLOR="lightgrey"></TD></TR>  
+                </TABLE>> shape=none]
+	13 [label=<
+                <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+                    <TR><TD>E' → + • T E'</TD></TR>
+                    <TR><TD BGCOLOR="lightgrey">T → • F T'<BR/>F → • ( E )<BR/>F → • id</TD></TR>  
+                </TABLE>> shape=none]
+	8 [label=<
+                <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+                    <TR><TD>T → F T' •</TD></TR>
+                    <TR><TD BGCOLOR="lightgrey"></TD></TR>  
+                </TABLE>> shape=none]
+	9 [label=<
+                <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+                    <TR><TD>T' → * • F T'</TD></TR>
+                    <TR><TD BGCOLOR="lightgrey">F → • ( E )<BR/>F → • id</TD></TR>  
+                </TABLE>> shape=none]
+	6 [label=<
+                <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+                    <TR><TD>F → ( E • )</TD></TR>
+                    <TR><TD BGCOLOR="lightgrey"></TD></TR>  
+                </TABLE>> shape=none]
+	aceptar [shape=none]
+	7 [label=<
+                <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+                    <TR><TD>F → ( E ) •</TD></TR>
+                    <TR><TD BGCOLOR="lightgrey"></TD></TR>  
+                </TABLE>> shape=none]
+	10 [label=<
+                <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+                    <TR><TD>T' → * F • T'</TD></TR>
+                    <TR><TD BGCOLOR="lightgrey">T' → • * F T'<BR/>T' → • ε</TD></TR>  
+                </TABLE>> shape=none]
+	11 [label=<
+                <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+                    <TR><TD>T' → * F T' •</TD></TR>
+                    <TR><TD BGCOLOR="lightgrey"></TD></TR>  
+                </TABLE>> shape=none]
+	14 [label=<
+                <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+                    <TR><TD>E' → + T • E'</TD></TR>
+                    <TR><TD BGCOLOR="lightgrey">E' → • + T E'<BR/>E' → • ε</TD></TR>  
+                </TABLE>> shape=none]
+	15 [label=<
+                <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+                    <TR><TD>E' → + T E' •</TD></TR>
+                    <TR><TD BGCOLOR="lightgrey"></TD></TR>  
+                </TABLE>> shape=none]
+}
