@@ -1,4 +1,4 @@
-/* Configuración del parser para gramática No.1 */
+/* Configuración del parser para gramática */
 
 /* Definición de tokens */
 %token id
@@ -15,21 +15,17 @@ IGNORE espacioEnBlanco
 E:
     T E'
 ;
-
 E':
     + T E'
   | ε
 ;
-
 T:
     F T'
 ;
-
 T':
     * F T'
   | ε
 ;
-
 F:
     ( E )
   | id
